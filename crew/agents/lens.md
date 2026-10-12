@@ -2,7 +2,7 @@
 name: lens
 description: Vision specialist. Use for screenshots, images, UI inspection, PDFs, and any visual file — the only role that should interpret images.
 tools: read, bash
-model: opencode-go/space-bunny-free
+model: opencode-go/deepseek-v4.1-flash
 thinking: low
 max_turns: 5
 skills: []

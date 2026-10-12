@@ -1,6 +1,7 @@
 ---
 name: crew-plan
 description: Cut an approved design into an execution ledger — 2–5 minute tasks with file paths, dependencies, and per-task verification. Use when planning implementation after brainstorming, or when the user says "plan".
+disable-model-invocation: true
 ---
 
 # crew plan
@@ -21,11 +22,16 @@ Turn an approved design (or the user's ask) into an execution plan the crew-orch
 
 ## Output
 
-The ledger, ready for `/go`:
+Write two durable files (only the MAIN session writes `.crew/` files; dispatched subagents report, never write), ready for `/go`:
+
+- `.crew/spec.md` — the destination: problem statement, acceptance criteria (user-visible behaviors), and explicitly what is out of scope. Written from the approved design or the user's ask.
+- `.crew/tickets.md` — the journey AND the live ledger: one line per task, checkbox plus status (`pending | running | done | blocked`), with exact file paths, dependency edges (`needs: tN`), parallel-safe yes/no, one verification command, and the assignee role. Each per-ticket brief must be complete enough for a fresh specialist with no session context. Tasks stay 2–5 minutes each; order by dependency.
 
 ```
-- [ ] t1 <what> → <paths> — verify: <cmd> — (smith) [parallel-safe: yes/no, needs: ...]
+- [ ] t1 <what> → <paths> — status: pending — verify: <cmd> — (smith) [parallel-safe: yes/no, needs: ...]
 - [ ] t2 ...
 ```
 
-Ask the user to confirm before dispatch. Plan quality bar: an enthusiastic junior with no context, no judgement, and an aversion to testing could not misread it.
+Any ticket that changes an interface (exported signature, function arguments, module boundary) must state the interface delta explicitly.
+
+Ask the user to confirm the plan and deltas before dispatch. Plan quality bar: an enthusiastic junior with no context, no judgement, and an aversion to testing could not misread it.

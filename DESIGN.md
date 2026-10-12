@@ -21,7 +21,7 @@ mkdir -p ~/.pi/agent/extensions && cp $C/extension/crew.ts ~/.pi/agent/extension
 /model opencode-go/gpt-6-luna               # main session = orchestrator
 /thinking high                             # orchestrator level
 > /brainstorm rate-limiting middleware    # forces crew-brainstorm skill
-> /plan                                   # forces crew-plan skill → 2–5 min task ledger
+> /plan                                   # forces crew-plan skill → spec.md + tickets.md (2–5 min task ledger)
 > /go migrate the config loader to zod    # forces crew-orchestrate:
     ledger → dispatch @scout/@sage as ONE message (background, parallel)
     → reconcile each terminal result → @smith builds → review gate → report
@@ -32,20 +32,22 @@ Bootstrap (extension injects one tagged system-prompt section, hidden from the t
 ```
 crew active
 roles: @scout research/verify · @sage debug/reason · @smith build · @lens vision
-protocol: /skill:crew-orchestrate before dispatching; ledger → dispatch →
-reconcile on terminal results; claims need evidence; images → @lens (crew may not see them).
+thinking: scout low · smith xhigh · sage max · lens low (orchestrator: high)
+protocol: force-load /skill:crew-orchestrate before dispatching; ledger -> dispatch background tasks in parallel -> reconcile each terminal result; claims need evidence; images -> @lens (you may not see them).
+state: .crew/tickets.md — open checkboxes → resume before dispatching
+artifacts: .crew/{spec.md,tickets.md,GLOSSARY.md} + adr/ + research/ — main session writes only
 ```
 
 ### Call sites
 
 1. **Orchestrate**: `/go migrate the config loader to zod` — crew orchestrates via native Agent tool.
 2. **Delegate**: `@scout find every fetch() call site handling 429` — background, result returns.
-3. **Vision**: screenshot in → main session delegates describing to `@lens` (mimo-v2.5), never claims to see it.
+3. **Vision**: screenshot in → main session delegates describing to `@lens` (deepseek-v4.1-flash), never claims to see it.
 4. **Change a role's model**: edit one `model:` line in `~/.pi/agent/agents/<role>.md`, `/reload`.
 
 ## Problem
 
-Pack superpowers' skills+commands+bootstrap and omo-slim's background dispatch/reconcile into one package, simpler than both, tuned to opencode-go tiers (flash=cheap scout, v4-pro=reasoning, muse-spark=coding, mimo-v2.5=vision). Non-obvious in Pi: most machinery the OpenCode shape needed already exists natively — Agent tool with custom `.md` agents (background, parallel, per-agent `model:` frontmatter), description-routed skills, prompt templates. So the plugin shrinks to *resources + a bootstrap extension*; TS is glue, not orchestration.
+Pack superpowers' skills+commands+bootstrap and omo-slim's background dispatch/reconcile into one package, simpler than both, tuned to opencode-go tiers (flash=cheap scout, glm-5.3-flash=reasoning, muse-spark=coding, deepseek-v4.1-flash=vision). Non-obvious in Pi: most machinery the OpenCode shape needed already exists natively — Agent tool with custom `.md` agents (background, parallel, per-agent `model:` frontmatter), description-routed skills, prompt templates. So the plugin shrinks to *resources + a bootstrap extension*; TS is glue, not orchestration.
 
 ## Shape
 
@@ -57,7 +59,7 @@ Pack superpowers' skills+commands+bootstrap and omo-slim's background dispatch/r
 | scout.md | opencode-go/gpt-6-luna | low | dials *down* — short evidence reports, negligible thinking tokens |
 | sage.md | opencode-go/glm-5.3-flash | max | `max`-capable at 0.5 out (deepseek-v4-pro: 1.98); deepseek-v4.1-flash is the same-price fallback |
 | smith.md | opencode-go/muse-spark-1.3-contributor | xhigh | output-heavy build role on the cheapest output rate (0.2); xhigh is its ceiling |
-| lens.md | opencode-go/space-bunny-free | low | free, vision-capable; rarely-used role |
+| lens.md | opencode-go/deepseek-v4.1-flash | low | vision-capable at scout-tier price; rarely-used role |
 
 Assumptions: A1 capability tiers are unmeasured — a same-task head-to-head probe (scout difficulty) tied gpt-6-luna and deepseek-v4.1-flash (3/3 correct each); harder sage-tier signal still open. A2 **verified**: opencode-go provider authenticated in-env (`https://opencode.ai/zen/go/v1`); catalog has all lineup IDs (bare `muse-spark` absent → `muse-spark-1.3-contributor`). A3 **verified empirically**: two `scout` dispatches ran concurrently, both resolving the frontmatter model pin. Thinking-ladder constraint: mimo/qwen/minimax/kimi expose **no** levels — excluded from every role. Levels are pinned per agent via `thinking:` frontmatter (pi-subagents reads it; dispatch-time `thinking` param overrides only when deliberate).
 
@@ -86,7 +88,7 @@ session   all orchestration in crew-orchestrate.md, zero TS:
             ledger → Agent tool: launch [scout, sage] in ONE message (background)
             → terminal results return → verify (evidence or spot-check)
             → ledger update → next wave → ≤1 retry then escalate (sage) → attempt cap 3 → review gate
-images    prompt rule: delegate to @lens (code relay deferred — see Deviations)
+images    prompt rule: delegate to @lens (code relay deferred — see Deviations; unchanged in v1.1)
 ```
 
 ### Invariants
@@ -121,7 +123,7 @@ Base: crew (arena 28/27 over code-first Conductor). Grafts kept: attempt cap (pr
 - Model pins spread across 4 files → no single preset switch; edit + `/reload` instead.
 - No code image relay → text-only orchestrator may waste one turn before delegating to @lens.
 - Unverified A1/A2 (muse-spark capability, opencode-go endpoint) → one-line frontmatter/endpoint fallbacks.
-- In-context ledger → zero task-state infra; terse checkbox format mitigates compaction loss.
+- Durable `.crew/tickets.md` ledger → zero task-state infra; resume on open checkboxes, terse lines mitigate compaction loss.
 
 ## Alternatives considered
 
@@ -150,3 +152,21 @@ Base: crew (arena 28/27 over code-first Conductor). Grafts kept: attempt cap (pr
 | 4 | remaining 7 skills + 3 prompt templates | `/brainstorm`, `/plan` produce expected artifacts |
 | 5 | README + models.json template; catalog check | model IDs resolve — **done: A2 verified, muse-spark ID corrected** |
 | 6 | A3 probe: dispatch 2 scouts in one message | concurrent execution observed (expected native) |
+
+## v1.1 — artifact graft
+
+Additive graft of Matt Pocock's artifact discipline onto the 8 skills; no install mechanics changed, skill count stays 8.
+
+**Artifacts.** Durable per-project state in `.crew/` at the target repo root: `spec.md` (destination — problem, acceptance criteria, out of scope), `tickets.md` (journey + live ledger: checkboxes, status, dependency edges, parallel-safe, assignee, per-ticket brief/verify, interface deltas), `GLOSSARY.md` (pure vocabulary), `.crew/adr/NNN-<slug>.md` (only when hard-to-reverse + surprising + real tradeoff — most sessions produce zero), `research/*.md` (cited notes for load-bearing recon).
+
+**Invariant.** Only the MAIN session (orchestrator) writes `.crew/`; dispatched subagents report, never write. Rationale: Pocock's documented bug where skills that write files silently no-op inside orchestration layers — so children return evidence in terminal results and the orchestrator persists.
+
+**Skill deltas.** brainstorm writes glossary inline + gated ADRs; plan emits `spec.md` + `tickets.md` and requires user-confirmed interface deltas; orchestrate uses `tickets.md` as ledger (resume on open checkboxes), briefs via context pointers, review gate dispatches TWO children in one message (sage = Spec axis, scout = Standards axis), closes with a retro editing the PROJECT's `AGENTS.md` (most severe first, diff shown; never crew's own skills/agents); review runs the two-axis dispatch; build gates on ticket interface deltas before the first red test (interface change unstated in ticket → stop, never invent); scout marks keep-worthy findings `[persist]` and stays read-only (orchestrator writes `research/*.md`).
+
+**Invocation.** brainstorm and plan carry `disable-model-invocation: true` (user gesture only); orchestrate intentionally stays model-invocable (bootstrap and `/go` rely on it).
+
+**Model change.** lens pinned to `opencode-go/deepseek-v4.1-flash`. Image-relay deferral (deviation 3) unchanged in v1.1.
+
+**Deliberately not building:** tracker/gh integration, worktrees/integration branch, wayfinder/handoff/prototype, new skills, self-editing crew skills, setup command.
+
+**Open risk:** live dispatch smoke test still blocked while opencode-go returns 402.

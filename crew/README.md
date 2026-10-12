@@ -8,9 +8,9 @@ Superpowers-lite skills + omo-slim-style background orchestration for [Pi](https
 | `@scout` | `opencode-go/gpt-6-luna` | low | recon, docs, verification sweeps |
 | `@sage` | `opencode-go/glm-5.3-flash` | max | hard debugging, design review, escalation |
 | `@smith` | `opencode-go/muse-spark-1.3-contributor` | xhigh | implementation (strict TDD) |
-| `@lens` | `opencode-go/space-bunny-free` | low | vision: screenshots, UI, PDFs |
+| `@lens` | `opencode-go/deepseek-v4.1-flash` | low | vision: screenshots, UI, PDFs |
 
-Workflow: `/brainstorm` → `/plan` → `/go`. Dispatch runs background/parallel via Pi's native Agent tool; state lives in a checkbox ledger; claims need evidence.
+Workflow: `/brainstorm` → `/plan` → `/go`. Durable per-project state lives in `.crew/` at the target repo root: `spec.md` (destination: problem, acceptance criteria, out of scope), `tickets.md` (journey + live ledger the orchestrator resumes on), `GLOSSARY.md` (vocabulary), `adr/` (gated decisions), `research/` (load-bearing recon notes). Only the main session writes `.crew/` — dispatched subagents report evidence, never write. Claims need evidence.
 
 ## Install
 
@@ -42,7 +42,7 @@ If installing elsewhere, verify with `/model`; if `opencode-go` is absent, add a
         { "id": "gpt-6-luna" },
         { "id": "glm-5.3-flash" },
         { "id": "muse-spark-1.3-contributor" },
-        { "id": "space-bunny-free", "input": ["text", "image"] },
+        { "id": "deepseek-v4.1-flash", "input": ["text", "image"] },
         { "id": "mimo-v2.6-flash", "input": ["text", "image"] }
       ]
     }
@@ -62,7 +62,11 @@ Endpoint/key unknown at time of writing — if opencode-go isn't OpenAI-compatib
 
 1. `pi --extension ./extension/crew.ts -p "quote the crew system prompt section"` → `CREW-OK crew active …`
 2. `/crew` → 4 roles with models, 8 skills.
-3. `/go <small goal>` → ledger forms, ≥2 agents dispatched in one message (concurrent), results reconciled with evidence.
+3. `/go <small goal>` → `.crew/tickets.md` ledger forms, ≥2 agents dispatched in one message (concurrent), results reconciled with evidence.
+4. Review gate: TWO children dispatched in one message — `sage` (Spec axis: diff vs `.crew/spec.md` + ticket acceptance) and `scout` (Standards axis: repo conventions, test quality, root-cause, secrets/debris); CRITICALs become new tickets.
+5. Retro: run closes by editing the *project's* `AGENTS.md` (most severe first, diff shown) — never crew's own skills/agents.
+
+Note: `/brainstorm` and `/plan` are user-gesture only (`disable-model-invocation: true`); `/go` (crew-orchestrate) stays model-invocable.
 
 ## Layout
 

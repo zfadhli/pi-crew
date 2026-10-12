@@ -1,18 +1,18 @@
 ---
 name: crew-review
-description: Adversarial review of a diff against the plan — severity-ranked findings, critical findings block, evidence over claims. Use before declaring work done or when the user says "review".
+description: Two-axis adversarial review of a diff against spec and standards — severity-ranked findings, critical findings block, evidence over claims. Use before declaring work done or when the user says "review".
 ---
 
 # crew review
 
-Review the branch/diff against the plan's acceptance criteria. Your job is to find what's wrong, not to approve.
+Two-axis adversarial review of the branch/diff. Your job is to find what's wrong, not to approve.
 
 ## Procedure
 
-1. Get the diff and the plan/ledger. Review only what changed plus its callers.
-2. Check in this order: (a) meets acceptance criteria? (b) tests actually exercise the new logic (not just the happy path), (c) root-cause quality — any symptom patches?, (d) conventions match the repo, (e) no leaked secrets/debug debris.
-3. Verify claims yourself: run the tests named in the task briefs; don't trust reported output.
-4. Report severity-ranked:
+1. In ONE message, dispatch TWO agents. Reviewers report findings only — they never write files (only the MAIN session writes `.crew/` files; skills that write files silently no-op inside orchestration layers):
+   - `sage` — Spec axis: does the diff faithfully implement `.crew/spec.md` and the ticket acceptance criteria in `.crew/tickets.md`? What was missed or misinterpreted?
+   - `scout` — Standards axis: repo conventions (including the project's AGENTS.md), whether the tests actually exercise the new logic (not just the happy path), root-cause quality (no symptom patches), and leaked secrets/debug debris.
+2. Reconcile both reports in the main session: merge, dedupe, severity-rank. Verify claims yourself — run the tests named in the task briefs, don't trust reported output. Report severity-ranked:
 
 ```
 CRITICAL (blocks): <what breaks / why> — file:line
@@ -20,8 +20,10 @@ MAJOR: ...
 MINOR: ...
 ```
 
+3. Fallback: if `.crew/spec.md` does not exist (standalone review), review against the plan or conversation the user names instead.
+
 ## Rules
 
 - Every finding cites `file:line` and the concrete failure it causes. No style nitpicks the repo's own formatter wouldn't catch.
-- No CRITICAL findings = pass. CRITICAL → back to the crew-orchestrate ledger as new tasks.
+- No CRITICAL findings = pass. CRITICAL findings block and become new tickets in `.crew/tickets.md` (written by the main session only).
 - Under 400 words.

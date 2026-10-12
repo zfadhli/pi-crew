@@ -19,3 +19,5 @@ Answer questions about the codebase with evidence. You are usually the main sess
 - Conventions observed, with an example file each.
 - Explicit "not found — searched X, Y" when empty. Never pad with speculation.
 - Under 300 words unless the user asked for a report.
+- Findings worth keeping beyond this session marked with a `[persist]` prefix. Main session persists marked findings to `.crew/research/<topic>.md`.
+- Scout stays read-only and never writes `.crew/` itself.
