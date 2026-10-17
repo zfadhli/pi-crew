@@ -94,7 +94,7 @@ images    prompt rule: delegate to @lens (code relay deferred — see Deviations
 ### Invariants
 
 - Exactly 8 skills, 4 subagent roles, 1 orchestrator (main session), 1 delegation syntax (Agent tool / `@role`), 3 commands, 1 bootstrap section.
-- No model name anywhere except agents/*.md frontmatter (+ models.json catalog).
+- No model name in shipped protocol text (crew/skills/, crew/prompts/, crew/extension/, bootstrap string) except crew/agents/*.md frontmatter (+ models.json catalog); docs and .crew/ artifacts may discuss models.
 - No protocol text anywhere except crew-orchestrate.md + bootstrap string.
 - Extension stateless: factory registers handlers only; no timers/processes.
 

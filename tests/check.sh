@@ -14,9 +14,11 @@ grep -q '^disable-model-invocation:' crew/skills/crew-orchestrate/SKILL.md && ba
 for f in crew/agents/*.md; do
   grep -q '^model:' "$f" || bad "$f: missing model:"
   grep -q '^thinking:' "$f" || bad "$f: missing thinking:"
+  grep -q '^skills:' "$f" || bad "$f: missing skills:"
 done
-grep -q 'verify:' crew/skills/crew-plan/SKILL.md || bad "crew-plan: template missing verify:"
-grep -q 'live:' crew/skills/crew-plan/SKILL.md || bad "crew-plan: template missing live:"
+grep -Fq 'verify: <cmd> — live: <cmd | n/a: reason>' crew/skills/crew-plan/SKILL.md || bad "crew-plan: template missing verify/live shape"
+if grep -rq 'opencode-go/' crew/skills/ crew/prompts/ crew/extension/; then bad "model slug outside crew/agents frontmatter"; fi
+if [ -f .crew/tickets.md ] && grep -Eq '^- \[ \].*— status: done' .crew/tickets.md; then bad "tickets: open checkbox with status: done"; fi
 if [ "$nodrift" -eq 0 ]; then
   while IFS= read -r f; do
     i="${f#crew/}"; i="${i/extension\//extensions/}"
