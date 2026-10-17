@@ -68,6 +68,8 @@ Endpoint/key unknown at time of writing — if opencode-go isn't OpenAI-compatib
 
 Note: `/brainstorm` and `/plan` are user-gesture only (`disable-model-invocation: true`); `/go` (crew-orchestrate) stays model-invocable.
 
+Harness: `bash tests/check.sh` (fast invariants + drift) and `bash tests/smoke.sh` (needs installed copies synced first; costs model calls).
+
 ## Layout
 
 ```

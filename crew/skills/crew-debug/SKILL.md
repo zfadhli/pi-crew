@@ -13,7 +13,8 @@ Find the root cause before touching code. Symptom patches are failures.
 2. **Hypothesize**: 2–3 candidate causes ranked by likelihood. Pick the cheapest experiment that discriminates between them (a log line, a one-off assertion, reading one file).
 3. **Experiment** until exactly one cause survives. The cause must explain ALL observed symptoms — if a symptom is unexplained, it's not root-caused yet.
 4. **Fix** at the root: one guard in the shared function beats a guard in every caller. Grep every caller before editing.
-5. **Verify**: rerun the original failing command, plus one check that the fix didn't break a sibling path.
+5. **Attack the premise**: if two or more fixes that share one premise have failed the same gate, stop; write the premise down and test it directly before a third fix that assumes it.
+6. **Verify**: rerun the original failing command, plus one check that the fix didn't break a sibling path.
 
 ## Output
 

@@ -10,7 +10,7 @@ Refine a rough idea into a design worth planning. No code yet.
 
 ## Procedure
 
-1. Restate the goal in one sentence. Ask the user the 2–5 questions whose answers actually change the design (data model, boundaries, auth, failure modes). Skip questions you can answer yourself — force-load `/skill:crew-scout` to check the codebase first.
+1. Restate the goal in one sentence. Ask the user the 2–5 questions whose answers actually change the design (data model, boundaries, auth, failure modes). Skip questions you can answer yourself — force-load `/skill:crew-scout` to check the codebase first. Settle empirical forks (answerable by running something — a spike, probe, or throwaway script) by experiment, not by asking; reserve questions for product or preference calls.
 2. Diverge: sketch 2–3 structurally distinct approaches (not point tweaks). One line each on what it optimizes for and what it costs.
 3. Converge: recommend one, name the decisive tradeoff, and integrate the user's picks from each round.
 4. Present the design in short sections sized to actually read: shape, data/API surface, edge cases, what we are deliberately NOT building.

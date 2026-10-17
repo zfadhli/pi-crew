@@ -169,4 +169,13 @@ Additive graft of Matt Pocock's artifact discipline onto the 8 skills; no instal
 
 **Deliberately not building:** tracker/gh integration, worktrees/integration branch, wayfinder/handoff/prototype, new skills, self-editing crew skills, setup command.
 
-**Open risk:** live dispatch smoke test still blocked while opencode-go returns 402.
+**Open risk:** sage-tier capability probe (deepseek-v4-pro vs glm-5.3-flash) still unrun; opencode-go is live and frontmatter dispatch is exercised.
+
+## v1.2 — verification + enforcement graft
+
+- Ticket line gains `live: <cmd | n/a: reason>`; crew-build runs it after green; inconclusive/wrong-surface is not a pass.
+- crew-review executes `verify:` + `live:` at a pinned commit SHA, verdict PASS/ISSUES/BLOCKED; gap ≠ pass.
+- Orchestrate: verification briefs pin SHA + method; gap → respawn once → record; retries are fresh consolidated dispatches, never resumed chains.
+- Retro enforcement ladder (architecture → lint/CI naming the fix → test → prose last), class counts at 2, prove each check fails on the recorded mistake, rule→enforcement table in the project's AGENTS.md; crew's own skills still never edited.
+- Harness: `tests/check.sh` (invariants + installed-copy drift) and `tests/smoke.sh` (scratch plan run + catalog probe).
+- Deferred: generated verify recipes; `.crew/verify.md` only when the drive recipe is non-obvious. Invariants unchanged: 8 skills, 4 agents, 3 prompts, 1 extension.

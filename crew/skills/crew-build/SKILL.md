@@ -15,6 +15,7 @@ Implement to brief, test-first. No code exists before its test.
 3. **Green**: minimal code to pass. Run the test. No extra structure, no speculative abstractions.
 4. Delete any code written before its test.
 5. **Commit** with the task id; rerun the surrounding test suite for regressions.
+6. **Live**: run the ticket's `live:` check on the real surface and capture its evidence. An inconclusive or wrong-surface check is not a pass — report it as such instead of claiming green. `live: n/a` is an already-recorded gap; do not invent a live check to fill it.
 
 ## Rules
 
@@ -25,4 +26,4 @@ Implement to brief, test-first. No code exists before its test.
 
 ## Output
 
-Files touched, test commands with verbatim pass/fail lines, any deviation from the brief (expected: none).
+Files touched, test commands with verbatim pass/fail lines, live-check evidence (or the recorded `n/a`), any deviation from the brief (expected: none).

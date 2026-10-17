@@ -17,6 +17,7 @@ Turn an approved design (or the user's ask) into an execution plan the crew-orch
    - Exact file paths to create or touch.
    - Complete-enough instruction that a fresh specialist with no session context succeeds (they see only the brief).
    - One verification command or test that proves it done.
+   - A live check: how the changed behavior is driven on its real surface (CLI/server/UI) and what evidence it produces (verbatim output, screenshot path, HTTP response). If the repo has no way to drive it, write `live: n/a — <reason>`; never drop the field. When the drive recipe is non-obvious, write it once to `.crew/verify.md` (launch, drive, evidence, cleanup) and point tickets at it instead of repeating commands.
 4. Order by dependency; mark parallel-safe tasks explicitly.
 5. Every plan gets at least one review task (`sage` vs the diff and this plan) at the end.
 
@@ -25,10 +26,10 @@ Turn an approved design (or the user's ask) into an execution plan the crew-orch
 Write two durable files (only the MAIN session writes `.crew/` files; dispatched subagents report, never write), ready for `/go`:
 
 - `.crew/spec.md` — the destination: problem statement, acceptance criteria (user-visible behaviors), and explicitly what is out of scope. Written from the approved design or the user's ask.
-- `.crew/tickets.md` — the journey AND the live ledger: one line per task, checkbox plus status (`pending | running | done | blocked`), with exact file paths, dependency edges (`needs: tN`), parallel-safe yes/no, one verification command, and the assignee role. Each per-ticket brief must be complete enough for a fresh specialist with no session context. Tasks stay 2–5 minutes each; order by dependency.
+- `.crew/tickets.md` — the journey AND the live ledger: one line per task, checkbox plus status (`pending | running | done | blocked`), with exact file paths, dependency edges (`needs: tN`), parallel-safe yes/no, one verification command, a live field (`live: <cmd | n/a: reason>` — how the changed behavior is driven on its real surface and what evidence it produces), and the assignee role. Each per-ticket brief must be complete enough for a fresh specialist with no session context. Tasks stay 2–5 minutes each; order by dependency.
 
 ```
-- [ ] t1 <what> → <paths> — status: pending — verify: <cmd> — (smith) [parallel-safe: yes/no, needs: ...]
+- [ ] t1 <what> → <paths> — status: pending — verify: <cmd> — live: <cmd | n/a: reason> — (smith) [parallel-safe: yes/no, needs: ...]
 - [ ] t2 ...
 ```
 
