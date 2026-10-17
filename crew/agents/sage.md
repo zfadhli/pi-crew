@@ -2,7 +2,7 @@
 name: sage
 description: Strong-reasoning specialist for hard debugging, architecture decisions, and design review. Use when the problem needs careful analysis rather than speed.
 tools: read, grep, find, ls, bash
-model: opencode-go/glm-5.3-flash
+model: opencode-go/deepseek-v4.1-flash
 thinking: max
 max_turns: 30
 skills: []

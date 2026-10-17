@@ -169,7 +169,7 @@ Additive graft of Matt Pocock's artifact discipline onto the 8 skills; no instal
 
 **Deliberately not building:** tracker/gh integration, worktrees/integration branch, wayfinder/handoff/prototype, new skills, self-editing crew skills, setup command.
 
-**Open risk:** sage-tier capability probe (deepseek-v4-pro vs glm-5.3-flash) still unrun; opencode-go is live and frontmatter dispatch is exercised.
+**Probe result (v1.2 review gate).** sage-tier capability probe run: v1.2 Spec-review brief replayed at `d993f2e`, 3 runs deepseek-v4.1-flash @ max vs 1 recorded glm-5.3-flash run. Both matched glm's 7/7 findings; deepseek added 4 true findings glm missed (gap-recording has no terminal ledger status — still open at `b7462be`; smoke's file-scoped `live:` grep; DESIGN model-name invariant unscoped; t10 ticket dropped `live:`), with 1 replay-artifact false positive (drift gate red because installed copies were post-fixup). Wall 220–279s vs 56s, tokens 61–88k vs 37k. deepseek ≥ glm → sage swapped to `opencode-go/deepseek-v4.1-flash`; the 4–5× latency is accepted for a background review gate.
 
 ## v1.2 — verification + enforcement graft
 
