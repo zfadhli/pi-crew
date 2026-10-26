@@ -27,3 +27,22 @@ Consumed by crew-orchestrate, crew-build, crew-review.
 ## Out of scope
 
 Generated verify recipes/skills — `.crew/verify.md` only when a ticket's drive recipe is non-obvious. No arena/swarm panels, no playbook router, no new skills, no autonomy change, no PR/forge automation.
+
+## v1.2.1 (patch batch)
+
+Model strategy collapsed to one model for the three non-main roles (`opencode-go/deepseek-v4.1-flash`); thinking level now carries the role split (scout/lens low, sage/smith max). Docs must match shipped frontmatter. Two v1.2 gaps close: a recorded gap has no terminal ledger status, and the v1.2 review-gate line dropped the `live:` field the plan protocol says is never dropped.
+
+### Acceptance criteria
+
+1. Ledger vocabulary is `pending | running | done | blocked | gap` in both crew-plan and crew-orchestrate; the wave loop exits on complete, blocked, or gap; resume never re-dispatches a `gap` line automatically.
+2. Every `.crew/tickets.md` line, including v1.2 history, carries `verify:` and `live:`.
+3. crew/README.md and DESIGN.md model tables match `crew/agents/*.md` frontmatter; no `muse-spark-1.3-contributor` or `glm-5.3-flash` pin survives; DESIGN records the measured deepseek-v4.1-flash sage-tier probe and marks the smith tier unmeasured.
+4. `bash tests/check.sh` zero drift and `bash tests/smoke.sh` green after installed copies are synced.
+
+### Interface delta
+
+Ledger status vocabulary gains `gap`. `.crew/tickets.md` line shape is unchanged.
+
+### Out of scope
+
+Parallel-serialization graft (awaits separate "go"), the 3-builder worktree experiment, and any new skill, agent, prompt, or extension.

@@ -26,7 +26,7 @@ Turn an approved design (or the user's ask) into an execution plan the crew-orch
 Write two durable files (only the MAIN session writes `.crew/` files; dispatched subagents report, never write), ready for `/go`:
 
 - `.crew/spec.md` — the destination: problem statement, acceptance criteria (user-visible behaviors), and explicitly what is out of scope. Written from the approved design or the user's ask.
-- `.crew/tickets.md` — the journey AND the live ledger: one line per task, checkbox plus status (`pending | running | done | blocked`), with exact file paths, dependency edges (`needs: tN`), parallel-safe yes/no, one verification command, a live field (`live: <cmd | n/a: reason>` — how the changed behavior is driven on its real surface and what evidence it produces), and the assignee role. Each per-ticket brief must be complete enough for a fresh specialist with no session context. Tasks stay 2–5 minutes each; order by dependency.
+- `.crew/tickets.md` — the journey AND the live ledger: one line per task, checkbox plus status (`pending | running | done | blocked | gap`), with exact file paths, dependency edges (`needs: tN`), parallel-safe yes/no, one verification command, a live field (`live: <cmd | n/a: reason>` — how the changed behavior is driven on its real surface and what evidence it produces), and the assignee role. Each per-ticket brief must be complete enough for a fresh specialist with no session context. Tasks stay 2–5 minutes each; order by dependency.
 
 ```
 - [ ] t1 <what> → <paths> — status: pending — verify: <cmd> — live: <cmd | n/a: reason> — (smith) [parallel-safe: yes/no, needs: ...]
