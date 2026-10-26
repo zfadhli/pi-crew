@@ -5,9 +5,9 @@ Superpowers-lite skills + omo-slim-style background orchestration for [Pi](https
 | role | default model | thinking | duty |
 |---|---|---|---|
 | main session | `opencode-go/gpt-6-luna` (`/model`, `/thinking high`) | high | plan, dispatch, reconcile, review |
-| `@scout` | `opencode-go/gpt-6-luna` | low | recon, docs, verification sweeps |
-| `@sage` | `opencode-go/glm-5.3-flash` | max | hard debugging, design review, escalation |
-| `@smith` | `opencode-go/muse-spark-1.3-contributor` | xhigh | implementation (strict TDD) |
+| `@scout` | `opencode-go/deepseek-v4.1-flash` | low | recon, docs, verification sweeps |
+| `@sage` | `opencode-go/deepseek-v4.1-flash` | max | hard debugging, design review, escalation |
+| `@smith` | `opencode-go/deepseek-v4.1-flash` | max | implementation (strict TDD) |
 | `@lens` | `opencode-go/deepseek-v4.1-flash` | low | vision: screenshots, UI, PDFs |
 
 Workflow: `/brainstorm` → `/plan` → `/go`. Durable per-project state lives in `.crew/` at the target repo root: `spec.md` (destination: problem, acceptance criteria, out of scope), `tickets.md` (journey + live ledger the orchestrator resumes on), `GLOSSARY.md` (vocabulary), `adr/` (gated decisions), `research/` (load-bearing recon notes). Only the main session writes `.crew/` — dispatched subagents report evidence, never write. Claims need evidence.
@@ -27,7 +27,7 @@ Restart Pi (or `/reload`). Verify: `/crew` lists 4 roles + models + skills.
 
 ## Models
 
-Model IDs above were verified against the `opencode-go` provider catalog in this environment (endpoint `https://opencode.ai/zen/go/v1`, authenticated via `opencode auth`-style login → `~/.pi/agent/auth.json`). Note: the bare `muse-spark` ID does not exist — catalog uses `muse-spark-1.3-contributor`.
+Model IDs above were verified against the `opencode-go` provider catalog in this environment (endpoint `https://opencode.ai/zen/go/v1`, authenticated via `opencode auth`-style login → `~/.pi/agent/auth.json`). The three non-main roles share one model — the `thinking` level carries the role split.
 
 If installing elsewhere, verify with `/model`; if `opencode-go` is absent, add a compatible endpoint to `~/.pi/agent/models.json`:
 
@@ -40,10 +40,7 @@ If installing elsewhere, verify with `/model`; if `opencode-go` is absent, add a
       "apiKey": "$OPENCODE_GO_KEY",
       "models": [
         { "id": "gpt-6-luna" },
-        { "id": "glm-5.3-flash" },
-        { "id": "muse-spark-1.3-contributor" },
-        { "id": "deepseek-v4.1-flash", "input": ["text", "image"] },
-        { "id": "mimo-v2.6-flash", "input": ["text", "image"] }
+        { "id": "deepseek-v4.1-flash", "input": ["text", "image"] }
       ]
     }
   }

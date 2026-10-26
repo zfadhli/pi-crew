@@ -1,8 +1,8 @@
 ---
 name: smith
 description: Implementation specialist. Use for well-scoped building tasks -  write code, tests, migrations, scripts — strict TDD slices from a concrete brief.
-model: opencode-go/muse-spark-1.3-contributor
-thinking: xhigh
+model: opencode-go/deepseek-v4.1-flash
+thinking: max
 max_turns: 60
 skills: []
 ---

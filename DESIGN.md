@@ -47,7 +47,7 @@ artifacts: .crew/{spec.md,tickets.md,GLOSSARY.md} + adr/ + research/ — main se
 
 ## Problem
 
-Pack superpowers' skills+commands+bootstrap and omo-slim's background dispatch/reconcile into one package, simpler than both, tuned to opencode-go tiers (flash=cheap scout, glm-5.3-flash=reasoning, muse-spark=coding, deepseek-v4.1-flash=vision). Non-obvious in Pi: most machinery the OpenCode shape needed already exists natively — Agent tool with custom `.md` agents (background, parallel, per-agent `model:` frontmatter), description-routed skills, prompt templates. So the plugin shrinks to *resources + a bootstrap extension*; TS is glue, not orchestration.
+Pack superpowers' skills+commands+bootstrap and omo-slim's background dispatch/reconcile into one package, simpler than both, tuned to opencode-go model tiers as designed (cheap recon, mid reasoning, cheapest-output build, vision) — since collapsed to one model for three roles, see v1.2.1. Non-obvious in Pi: most machinery the OpenCode shape needed already exists natively — Agent tool with custom `.md` agents (background, parallel, per-agent `model:` frontmatter), description-routed skills, prompt templates. So the plugin shrinks to *resources + a bootstrap extension*; TS is glue, not orchestration.
 
 ## Shape
 
@@ -56,12 +56,12 @@ Pack superpowers' skills+commands+bootstrap and omo-slim's background dispatch/r
 | agent file | model | thinking | rationale |
 |---|---|---|---|
 | main session (no file) | opencode-go/gpt-6-luna | high | full ladder → max, vision, 1M ctx; 4x cheaper output than deepseek-v4-pro |
-| scout.md | opencode-go/gpt-6-luna | low | dials *down* — short evidence reports, negligible thinking tokens |
-| sage.md | opencode-go/glm-5.3-flash | max | `max`-capable at 0.5 out (deepseek-v4-pro: 1.98); deepseek-v4.1-flash is the same-price fallback |
-| smith.md | opencode-go/muse-spark-1.3-contributor | xhigh | output-heavy build role on the cheapest output rate (0.2); xhigh is its ceiling |
+| scout.md | opencode-go/deepseek-v4.1-flash | low | recon: short evidence reports, level dials *down* to keep thinking tokens negligible; one model for three roles → the level separates, not the model |
+| sage.md | opencode-go/deepseek-v4.1-flash | max | reasoning: measured equal-or-better than glm-5.3-flash on the review replay and 4–5× slower — fine for a background gate (A1) |
+| smith.md | opencode-go/deepseek-v4.1-flash | max | build: output-heavy TDD work, `max` because the review result is the only measurement we have; this tier is the unmeasured one (A1) |
 | lens.md | opencode-go/deepseek-v4.1-flash | low | vision-capable at scout-tier price; rarely-used role |
 
-Assumptions: A1 capability tiers are unmeasured — a same-task head-to-head probe (scout difficulty) tied gpt-6-luna and deepseek-v4.1-flash (3/3 correct each); harder sage-tier signal still open. A2 **verified**: opencode-go provider authenticated in-env (`https://opencode.ai/zen/go/v1`); catalog has all lineup IDs (bare `muse-spark` absent → `muse-spark-1.3-contributor`). A3 **verified empirically**: two `scout` dispatches ran concurrently, both resolving the frontmatter model pin. Thinking-ladder constraint: mimo/qwen/minimax/kimi expose **no** levels — excluded from every role. Levels are pinned per agent via `thinking:` frontmatter (pi-subagents reads it; dispatch-time `thinking` param overrides only when deliberate).
+Assumptions: A1 **sage tier measured, smith tier not** — the v1.2 Spec-review brief was replayed at pinned commit `d993f2e`, 3 runs of deepseek-v4.1-flash at `max` vs 1 recorded glm-5.3-flash run: deepseek matched glm's 7 findings every run (7/7, 7/7, 6/7) and added 4 distinct true findings, at 220–279s and 61–88k tokens vs 56s and 37k, accepted for a background review gate; **the smith (build) tier remains unmeasured**. A2 **verified**: opencode-go provider authenticated in-env (`https://opencode.ai/zen/go/v1`); catalog has all lineup IDs. A3 **verified empirically**: two `scout` dispatches ran concurrently, both resolving the frontmatter model pin. Thinking-ladder constraint: mimo/qwen/minimax/kimi expose **no** levels — excluded from every role. Levels are pinned per agent via `thinking:` frontmatter (pi-subagents reads it; dispatch-time `thinking` param overrides only when deliberate).
 
 ### Module map
 
@@ -122,7 +122,7 @@ Base: crew (arena 28/27 over code-first Conductor). Grafts kept: attempt cap (pr
 - Skills auto-route by description (may load late/miss) → commands force-load at workflow entry; `/skill:crew-*` always available.
 - Model pins spread across 4 files → no single preset switch; edit + `/reload` instead.
 - No code image relay → text-only orchestrator may waste one turn before delegating to @lens.
-- Unverified A1/A2 (muse-spark capability, opencode-go endpoint) → one-line frontmatter/endpoint fallbacks.
+- One model for three roles (scout/sage/smith) → less tier diversity, one shared failure mode; defended by the measured sage-tier probe (A1: 7/7, 7/7, 6/7 baseline plus 4 new true findings), though smith-tier capability is still unmeasured → one-line frontmatter fallback per role if a build task disappoints.
 - Durable `.crew/tickets.md` ledger → zero task-state infra; resume on open checkboxes, terse lines mitigate compaction loss.
 
 ## Alternatives considered
@@ -134,7 +134,7 @@ Base: crew (arena 28/27 over code-first Conductor). Grafts kept: attempt cap (pr
 ## Open questions and risks
 
 - Does opencode-go expose an OpenAI-compatible endpoint Pi can mount in `models.json` (A2)? Endpoint/key needed from you.
-- Orchestrator at scale: gpt-6-luna vs muse-spark for large multi-report reconciles?
+- Is deepseek-v4.1-flash at `max` good enough for implementation work (smith tier)? Unmeasured — the probe covered review, not build.
 - 4 concurrent dispatches vs opencode-go rate limits — if throttled, crew-orchestrate.md gets a wave-size rule (prose, not code).
 - Per-project crews (`.pi/agents/` project scope) later?
 
@@ -150,7 +150,7 @@ Base: crew (arena 28/27 over code-first Conductor). Grafts kept: attempt cap (pr
 | 2 | bootstrap section in before_agent_start | print-mode ask echoes "crew active" line |
 | 3 | crew-orchestrate skill (ledger, dispatch, reconcile, retry/escalate, cap 3) | `/go` on a 2-task sample: both children run, ledger reconciles |
 | 4 | remaining 7 skills + 3 prompt templates | `/brainstorm`, `/plan` produce expected artifacts |
-| 5 | README + models.json template; catalog check | model IDs resolve — **done: A2 verified, muse-spark ID corrected** |
+| 5 | README + models.json template; catalog check | model IDs resolve — **done: A2 verified, catalog IDs corrected** |
 | 6 | A3 probe: dispatch 2 scouts in one message | concurrent execution observed (expected native) |
 
 ## v1.1 — artifact graft
@@ -179,3 +179,11 @@ Additive graft of Matt Pocock's artifact discipline onto the 8 skills; no instal
 - Retro enforcement ladder (architecture → lint/CI naming the fix → test → prose last), class counts at 2, prove each check fails on the recorded mistake, rule→enforcement table in the project's AGENTS.md; crew's own skills still never edited.
 - Harness: `tests/check.sh` (invariants + installed-copy drift) and `tests/smoke.sh` (scratch plan run + catalog probe).
 - Deferred: generated verify recipes; `.crew/verify.md` only when the drive recipe is non-obvious. Invariants unchanged: 8 skills, 4 agents, 3 prompts, 1 extension.
+
+## v1.2.1 — one model, thinking carries the role split
+
+- **Swap.** scout, sage, and smith all pin `opencode-go/deepseek-v4.1-flash`; the thinking level carries the role split (`low` for scout, `max` for sage and smith). Main session stays `opencode-go/gpt-6-luna` at `high`; lens stays `deepseek-v4.1-flash` at `low`. The per-tier lineup is retired — one model for recon, reasoning, and build, one failure mode to track.
+- **Why.** Measured, not assumed. Replaying the v1.2 Spec-review brief at `d993f2e` gave deepseek 7/7, 7/7, 6/7 of glm's findings plus 4 distinct true findings, for 220–279s and 61–88k tokens against 56s and 37k. Equal-or-better findings at 4–5× latency is a good trade for a background review gate (A1).
+- **Still open.** The build (smith) tier has no probe behind it; `max` there is an inference from the review result, not a measurement. Tracked under Open questions.
+- **Docs.** `crew/README.md`'s role table and this file's role table + assumptions now match `crew/agents/*.md` frontmatter. Model names stay confined to DESIGN.md and README.md; shipped protocol text (skills, prompts, extension, bootstrap) remains model-free.
+- **Evidence.** `.crew/research/sage-model-probe.md` — scorecard, new true findings, false-positive adjudication.

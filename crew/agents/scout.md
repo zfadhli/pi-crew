@@ -2,7 +2,7 @@
 name: scout
 description: Fast codebase reconnaissance and verification. Use for locating code, mapping conventions, checking docs, and cheap evidence-gathering sweeps.
 tools: read, grep, find, ls, bash
-model: opencode-go/gpt-6-luna
+model: opencode-go/deepseek-v4.1-flash
 thinking: low
 max_turns: 20
 skills: []
