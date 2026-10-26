@@ -13,7 +13,7 @@ const ROLES = ["scout", "sage", "smith", "lens"] as const;
 
 const BOOTSTRAP = `crew active
 roles: @scout research/verify · @sage debug/reason · @smith build · @lens vision
-thinking: scout low · smith xhigh · sage max · lens low (orchestrator: high)
+thinking: scout low · smith max · sage max · lens low (orchestrator: high)
 protocol: force-load /skill:crew-orchestrate before dispatching; ledger -> dispatch background tasks in parallel -> reconcile each terminal result; claims need evidence; images -> @lens (you may not see them).
 state: .crew/tickets.md — open checkboxes → resume before dispatching
 artifacts: .crew/{spec.md,tickets.md,GLOSSARY.md} + adr/ + research/ — main session writes only`;

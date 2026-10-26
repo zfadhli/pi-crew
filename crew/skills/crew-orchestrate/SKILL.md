@@ -13,18 +13,18 @@ Main-session-writes invariant: only the main session writes `.crew/` files; disp
 
 ## Ledger
 
-The ledger lives in `.crew/tickets.md` — checkbox lines with status + evidence (terse lines only — compaction-safe):
+The ledger lives in `.crew/tickets.md` — checkbox lines with status + evidence, status one of `pending | running | done | blocked | gap` (terse lines only — compaction-safe):
 
 ```
 - [x] t1 migrate config loader to zod (smith) — done — evidence: 14 tests pass, see commit abc
 - [ ] t2 map all config call sites (scout) — running
 - [ ] t3 review migration (sage) — pending, needs t1
-- [ ] t4 verify config parity (scout) — gap: no `live:` evidence after respawn, needs a fresh ticket
+- [x] t4 verify config parity (scout) — status: gap — no `live:` evidence after respawn; needs a fresh ticket
 ```
 
 Tasks come from `/skill:crew-plan` or are cut from the user's ask: 2–5 minutes each, dependency-ordered, with acceptance criteria.
 
-On run start, reconcile first: if `.crew/tickets.md` exists with open checkboxes, read it, verify current statuses, and resume from it before dispatching anything new. A `gap` line is terminal for resume — it is not re-dispatched; it needs a fresh ticket. New tasks (e.g. review CRITICALs) are appended to `.crew/tickets.md`.
+On run start, reconcile first: if `.crew/tickets.md` exists with open checkboxes, read it, verify current statuses, and resume from it before dispatching anything new. A `gap` line is terminal for resume — it is ticked, so the open-checkbox rule cannot re-dispatch it; it needs a fresh ticket. New tasks (e.g. review CRITICALs) are appended to `.crew/tickets.md`.
 
 ## Wave loop
 
@@ -37,7 +37,7 @@ On run start, reconcile first: if `.crew/tickets.md` exists with open checkboxes
 
 ## Rules
 
-- Thinking levels are pinned per agent in `agents/*.md` frontmatter (scout low, smith xhigh, sage max, lens low). Dispatch without a `thinking` override; deviate only deliberately, and never raise a level to fix a bad answer — fix the brief.
+- Thinking levels are pinned per agent in `agents/*.md` frontmatter (scout low, sage max, smith max, lens low). Dispatch without a `thinking` override; deviate only deliberately, and never raise a level to fix a bad answer — fix the brief.
 - Attempt cap per task: **3** (first + retry + post-escalation). Never more.
 - Max 4 agents in flight; if dispatch is rejected for concurrency, launch in waves of 2.
 - Never poll or re-launch a task that is still running; the ledger says what is in flight.

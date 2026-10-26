@@ -15,7 +15,7 @@ Implement to brief, test-first. No code exists before its test.
 3. **Green**: minimal code to pass. Run the test. No extra structure, no speculative abstractions.
 4. Delete any code written before its test.
 5. **Commit** with the task id; rerun the surrounding test suite for regressions.
-6. **Live**: run the ticket's `live:` check on the real surface and capture its evidence. When the ticket points at `.crew/verify.md`, follow that recipe (crew-plan writes it). An inconclusive or wrong-surface check is not a pass — report it as such instead of claiming green. `live: n/a` is an already-recorded gap; do not invent a live check to fill it.
+6. **Live**: run the ticket's `live:` check on the real surface and capture its evidence. When the ticket points at `.crew/verify.md`, follow that recipe (crew-plan writes it). An inconclusive or wrong-surface check is not a pass — report it as such instead of claiming green. `live: n/a` is a legitimate opt-out that carries a stated reason, unlike `gap`, the terminal status for required evidence that was never produced; do not invent a live check to fill it.
 
 ## Rules
 

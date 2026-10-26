@@ -32,7 +32,7 @@ Bootstrap (extension injects one tagged system-prompt section, hidden from the t
 ```
 crew active
 roles: @scout research/verify · @sage debug/reason · @smith build · @lens vision
-thinking: scout low · smith xhigh · sage max · lens low (orchestrator: high)
+thinking: scout low · smith max · sage max · lens low (orchestrator: high)
 protocol: force-load /skill:crew-orchestrate before dispatching; ledger -> dispatch background tasks in parallel -> reconcile each terminal result; claims need evidence; images -> @lens (you may not see them).
 state: .crew/tickets.md — open checkboxes → resume before dispatching
 artifacts: .crew/{spec.md,tickets.md,GLOSSARY.md} + adr/ + research/ — main session writes only
@@ -61,7 +61,7 @@ Pack superpowers' skills+commands+bootstrap and omo-slim's background dispatch/r
 | smith.md | opencode-go/deepseek-v4.1-flash | max | build: output-heavy TDD work, `max` because the review result is the only measurement we have; this tier is the unmeasured one (A1) |
 | lens.md | opencode-go/deepseek-v4.1-flash | low | vision-capable at scout-tier price; rarely-used role |
 
-Assumptions: A1 **sage tier measured, smith tier not** — the v1.2 Spec-review brief was replayed at pinned commit `d993f2e`, 3 runs of deepseek-v4.1-flash at `max` vs 1 recorded glm-5.3-flash run: deepseek matched glm's 7 findings every run (7/7, 7/7, 6/7) and added 4 distinct true findings, at 220–279s and 61–88k tokens vs 56s and 37k, accepted for a background review gate; **the smith (build) tier remains unmeasured**. A2 **verified**: opencode-go provider authenticated in-env (`https://opencode.ai/zen/go/v1`); catalog has all lineup IDs. A3 **verified empirically**: two `scout` dispatches ran concurrently, both resolving the frontmatter model pin. Thinking-ladder constraint: mimo/qwen/minimax/kimi expose **no** levels — excluded from every role. Levels are pinned per agent via `thinking:` frontmatter (pi-subagents reads it; dispatch-time `thinking` param overrides only when deliberate).
+Assumptions: A1 **sage tier measured, smith tier not** — the v1.2 Spec-review brief was replayed at pinned commit `d993f2e`, 3 runs of deepseek-v4.1-flash at `max` vs 1 recorded glm-5.3-flash run: deepseek matched 6–7 of glm's 7 findings per run (7/7, 7/7, 6/7) and added 4 distinct true findings, at 220–279s and 61–88k tokens vs 56s and 37k, accepted for a background review gate; **the smith (build) tier remains unmeasured**. A2 **verified**: opencode-go provider authenticated in-env (`https://opencode.ai/zen/go/v1`); catalog has all lineup IDs. A3 **verified empirically**: two `scout` dispatches ran concurrently, both resolving the frontmatter model pin. Thinking-ladder constraint: mimo/qwen/minimax/kimi expose **no** levels — excluded from every role. Levels are pinned per agent via `thinking:` frontmatter (pi-subagents reads it; dispatch-time `thinking` param overrides only when deliberate).
 
 ### Module map
 
@@ -169,7 +169,7 @@ Additive graft of Matt Pocock's artifact discipline onto the 8 skills; no instal
 
 **Deliberately not building:** tracker/gh integration, worktrees/integration branch, wayfinder/handoff/prototype, new skills, self-editing crew skills, setup command.
 
-**Probe result (v1.2 review gate).** sage-tier capability probe run: v1.2 Spec-review brief replayed at `d993f2e`, 3 runs deepseek-v4.1-flash @ max vs 1 recorded glm-5.3-flash run. Both matched glm's 7/7 findings; deepseek added 4 true findings glm missed (gap-recording has no terminal ledger status — still open at `b7462be`; smoke's file-scoped `live:` grep; DESIGN model-name invariant unscoped; t10 ticket dropped `live:`), with 1 replay-artifact false positive (drift gate red because installed copies were post-fixup). Wall 220–279s vs 56s, tokens 61–88k vs 37k. deepseek ≥ glm → sage swapped to `opencode-go/deepseek-v4.1-flash`; the 4–5× latency is accepted for a background review gate.
+**Probe result (v1.2 review gate).** sage-tier capability probe run: v1.2 Spec-review brief replayed at `d993f2e`, 3 runs deepseek-v4.1-flash @ max vs 1 recorded glm-5.3-flash run. deepseek matched 6–7 of glm's 7 findings per run (7/7, 7/7, 6/7), and added 4 true findings glm missed (gap-recording has no terminal ledger status — still open at `b7462be`; smoke's file-scoped `live:` grep; DESIGN model-name invariant unscoped; t10 ticket dropped `live:`), with 1 replay-artifact false positive (drift gate red because installed copies were post-fixup). Wall 220–279s vs 56s, tokens 61–88k vs 37k. deepseek ≥ glm → sage swapped to `opencode-go/deepseek-v4.1-flash`; the 4–5× latency is accepted for a background review gate.
 
 ## v1.2 — verification + enforcement graft
 

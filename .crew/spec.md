@@ -36,7 +36,7 @@ Model strategy collapsed to one model for the three non-main roles (`opencode-go
 
 1. Ledger vocabulary is `pending | running | done | blocked | gap` in both crew-plan and crew-orchestrate; the wave loop exits on complete, blocked, or gap; resume never re-dispatches a `gap` line automatically.
 2. Every `.crew/tickets.md` line, including v1.2 history, carries `verify:` and `live:`.
-3. crew/README.md and DESIGN.md model tables match `crew/agents/*.md` frontmatter; no `muse-spark-1.3-contributor` or `glm-5.3-flash` pin survives; DESIGN records the measured deepseek-v4.1-flash sage-tier probe and marks the smith tier unmeasured.
+3. crew/README.md and DESIGN.md model tables match `crew/agents/*.md` frontmatter; no `muse-spark-1.3-contributor` or `glm-5.3-flash` pin survives (a measurement baseline may still name the split-out model; what must not survive is a pin — frontmatter or a claim that a role runs on it); DESIGN records the measured deepseek-v4.1-flash sage-tier probe and marks the smith tier unmeasured.
 4. `bash tests/check.sh` zero drift and `bash tests/smoke.sh` green after installed copies are synced.
 
 ### Interface delta
