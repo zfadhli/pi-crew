@@ -15,3 +15,6 @@
 | Done ledger lines are ticked — never `[ ]` with `status: done` | `tests/check.sh` ledger guard |
 | Catalog hides `crew-brainstorm`/`crew-plan`, exposes `crew-orchestrate` | `tests/smoke.sh` catalog probe |
 | Generated tickets carry `verify:` + `live:` | `tests/smoke.sh` per-ticket assertion |
+| Every ledger line carries `verify:` + `live:` | `tests/check.sh` field sweep |
+| Ledger status is one of `pending running done blocked gap`; a `gap` row is ticked, never open | `tests/check.sh` vocabulary + open-gap guard |
+| Agent `thinking:` levels agree with crew-orchestrate and the extension bootstrap | `tests/check.sh` thinking-parity check |

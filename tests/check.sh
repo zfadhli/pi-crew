@@ -22,8 +22,9 @@ if [ -f .crew/tickets.md ] && grep -Eq '^- \[ \].*— status: done' .crew/ticket
 if [ -f .crew/tickets.md ]; then
   while IFS= read -r line; do
     id="${line#*\] }"; id="${id%% *}"
-    case "$line" in *verify:*) ;; *) bad "tickets: $id missing verify:" ;; esac
-    case "$line" in *live:*) ;; *) bad "tickets: $id missing live:" ;; esac
+    case "$line" in "- [ ]"*"— status: gap"*) bad "tickets: $id open checkbox with status: gap" ;; esac
+    case "$line" in *"— verify:"*) ;; *) bad "tickets: $id missing verify:" ;; esac
+    case "$line" in *"— live:"*) ;; *) bad "tickets: $id missing live:" ;; esac
   done < <(grep -E '^- \[' .crew/tickets.md)
   vocab=' pending running done blocked gap '
   while IFS= read -r w; do
@@ -37,7 +38,7 @@ for f in crew/agents/*.md; do
   n=$(sed -n 's/^name: *//p' "$f" | head -1); t=$(sed -n 's/^thinking: *//p' "$f" | head -1)
   if [ -z "$n" ] || [ -z "$t" ]; then bad "$f: missing name:/thinking: pair"; continue; fi
   for d in crew/skills/crew-orchestrate/SKILL.md crew/extension/crew.ts; do
-    grep -Fq "$n $t" "$d" || bad "$d: missing '$n $t' from crew/agents/$n.md frontmatter (state it as '$n $t')"
+    grep -Eq "$n $t([^A-Za-z]|\$)" "$d" || bad "$d: missing '$n $t' from crew/agents/$n.md frontmatter (state it as '$n $t')"
   done
 done
 if [ "$nodrift" -eq 0 ]; then

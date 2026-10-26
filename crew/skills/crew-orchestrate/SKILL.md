@@ -16,9 +16,9 @@ Main-session-writes invariant: only the main session writes `.crew/` files; disp
 The ledger lives in `.crew/tickets.md` — checkbox lines with status + evidence, status one of `pending | running | done | blocked | gap` (terse lines only — compaction-safe):
 
 ```
-- [x] t1 migrate config loader to zod (smith) — done — evidence: 14 tests pass, see commit abc
-- [ ] t2 map all config call sites (scout) — running
-- [ ] t3 review migration (sage) — pending, needs t1
+- [x] t1 migrate config loader to zod (smith) — status: done — evidence: 14 tests pass, see commit abc
+- [ ] t2 map all config call sites (scout) — status: running
+- [ ] t3 review migration (sage) — status: pending, needs t1
 - [x] t4 verify config parity (scout) — status: gap — no `live:` evidence after respawn; needs a fresh ticket
 ```
 
